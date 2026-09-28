@@ -79,9 +79,15 @@
 .md-typeset .admonition, .md-typeset details { border-radius: 0.45rem; border-width: 0; background: var(--lt-card);
   box-shadow: none; }
 
-/* Buttons on the home page */
-.md-typeset .md-button { border-radius: 0.4rem; }
+/* Buttons on the home page: always visible, readable on hover (Material's defaults draw a secondary
+   button in the header colour, which disappears on the dark page) */
+.md-typeset .md-button { border-radius: 0.4rem; border: 1px solid var(--lt-line); background: var(--lt-card);
+  color: var(--lt-text); font-weight: 600; }
+.md-typeset .md-button:hover, .md-typeset .md-button:focus { border-color: var(--lt-muted); background: var(--lt-card-2);
+  color: var(--lt-text); }
 .md-typeset .md-button--primary { background: var(--lt-hi-1); border-color: var(--lt-hi-1); color: var(--lt-hi-text); }
+.md-typeset .md-button--primary:hover, .md-typeset .md-button--primary:focus { background: #cbe8fb; border-color: #cbe8fb;
+  color: var(--lt-hi-text); }
 
 /* Screenshots side by side */
 .md-typeset .shots { display: flex; flex-wrap: wrap; gap: .8rem; align-items: flex-start; }
