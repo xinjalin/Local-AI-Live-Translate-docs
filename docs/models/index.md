@@ -33,7 +33,7 @@ How it's measured: [How we benchmark](benchmark-method.md).
     <div class="lt-panel-head">
       <div>
         <h2 id="by-language">By language</h2>
-        <p class="lt-sub">chrF for each language, best-translated first. Hover to compare the models at one language; click a model to show or hide it. * marks languages the app doesn't offer yet.</p>
+        <p class="lt-sub">chrF for each language, best-translated first. Hover to compare the models at one language, and point at a line or a model's button to pick it out; click a model to show or hide it. * marks languages the app doesn't offer yet.</p>
       </div>
       <div class="lt-toolbar">
         <div class="lt-seg" id="lt-dir-lang"><button data-v="into" class="lt-on">Into English</button><button data-v="from">From English</button></div>

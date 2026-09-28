@@ -152,6 +152,11 @@
       <button type="button" data-id="${esc(m.id)}" aria-pressed="${state.visible.has(m.id)}">
         <span class="lt-dot" style="background:${colorOf(m)}"></span>${esc(label(m))}
       </button>`).join('');
+    el.querySelectorAll('button').forEach(b => {
+      const line = () => langChart && langChart.data.datasets.findIndex(ds => ds.id === b.dataset.id);
+      b.addEventListener('mouseenter', () => langChart && highlight(langChart, line() >= 0 ? line() : null));
+      b.addEventListener('mouseleave', () => langChart && highlight(langChart, null));
+    });
     el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
       const id = b.dataset.id;
       if (state.visible.has(id)) {
@@ -164,6 +169,63 @@
     }));
   }
 
+  // Hovering a line (or its legend chip) brings it forward and fades the others
+  function highlight(ch, i) {
+    if (ch.$hot === i) return;
+    ch.$hot = i;
+    ch.data.datasets.forEach((ds, j) => {
+      const on = i === null || i === j;
+      ds.borderColor = on ? ds.color : alpha(ds.color, 0.16);
+      ds.borderWidth = i === j ? 3 : 2;
+      ds.pointHoverRadius = on ? 4 : 0;
+      ds.order = i === j ? -1 : 0;
+    });
+    ch.update('none');
+    if (ch.tooltip.opacity) langTip(ch, ch.tooltip);
+  }
+
+  // The line nearest the pointer, if one is within a few pixels of it
+  function lineAt(ch, x, y) {
+    let best = null, bestD = 9;
+    ch.data.datasets.forEach((ds, i) => {
+      const hit = ch.getDatasetMeta(i).dataset.interpolate({ x }, 'x');
+      const pt = Array.isArray(hit) ? hit[0] : hit;
+      if (pt && Math.abs(pt.y - y) < bestD) { bestD = Math.abs(pt.y - y); best = i; }
+    });
+    return best;
+  }
+
+  // Tooltip as HTML: a colour dot, the model and its score in separate, aligned columns
+  function langTip(ch, tip) {
+    const box = ch.canvas.parentNode;
+    let el = box.querySelector('.lt-tip');
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'lt-tip';
+      el.setAttribute('aria-hidden', 'true');
+      box.appendChild(el);
+    }
+    if (!tip.opacity || !tip.dataPoints || !tip.dataPoints.length) { el.style.opacity = 0; return; }
+    const code = ch.$order[tip.dataPoints[0].dataIndex];
+    const rows = [...tip.dataPoints].sort((a, b) => b.raw - a.raw).map(p => {
+      const ds = p.dataset;
+      const cls = ch.$hot === null ? '' : ch.$hot === p.datasetIndex ? ' lt-tip-hot' : ' lt-tip-dim';
+      return `<div class="lt-tip-row${cls}"><span class="lt-dot" style="background:${ds.color}"></span>` +
+        `<span class="lt-tip-name">${esc(ds.model.name)}<span class="lt-tip-q">${esc(ds.model.quant)}</span></span>` +
+        `<span class="lt-tip-val">${p.raw.toFixed(1)}</span></div>`;
+    }).join('');
+    el.innerHTML = `<div class="lt-tip-head"><span>${esc(data.names[code])}</span>` +
+      `${data.inApp.includes(code) ? '' : '<span class="lt-tip-note">not in the app yet</span>'}` +
+      `<span class="lt-tip-unit">chrF</span></div>${rows}`;
+    // Beside the pointer, flipping to the left near the right edge, kept inside the chart
+    const gap = 16, w = el.offsetWidth, h = el.offsetHeight;
+    const x = tip.caretX, y = ch.$pointerY == null ? tip.caretY : ch.$pointerY;
+    const left = x + gap + w > box.clientWidth ? x - gap - w : x + gap;
+    el.style.left = Math.max(0, left) + 'px';
+    el.style.top = Math.max(0, Math.min(box.clientHeight - h, y - h / 2)) + 'px';
+    el.style.opacity = 1;
+  }
+
   function drawLangChart() {
     const look = chartDefaults();
     const key = state.langDir;
@@ -174,12 +236,15 @@
     const order = [...langs].sort((a, b) => mean(b) - mean(a));
     const models = data.models.filter(m => state.visible.has(m.id));
     if (langChart) langChart.destroy();
+    const oldTip = document.getElementById('lt-lang-chart').parentNode.querySelector('.lt-tip');
+    if (oldTip) oldTip.style.opacity = 0;
     langChart = new Chart(document.getElementById('lt-lang-chart'), {
       type: 'line',
       data: {
         // (* = a language the app doesn't offer yet)
         labels: order.map(l => data.names[l] + (data.inApp.includes(l) ? '' : ' *')),
         datasets: models.map(m => ({
+          id: m.id, model: m, color: colorOf(m),
           label: label(m), data: order.map(l => m[key][l]), borderColor: colorOf(m), backgroundColor: colorOf(m),
           borderWidth: 2, cubicInterpolationMode: 'monotone', pointRadius: 0, pointHoverRadius: 4, pointHitRadius: 8
         }))
@@ -196,12 +261,20 @@
         },
         plugins: {
           legend: { display: false },
-          tooltip: { ...look.tooltip, itemSort: (a, b) => b.raw - a.raw,
-                     callbacks: { label: c => ` ${c.dataset.label}  ${c.raw}` } }
+          tooltip: { enabled: false, external: ({ chart, tooltip }) => langTip(chart, tooltip) }
         }
       },
-      // Dashed line under the pointer, as in the tooltip's column
-      plugins: [{ id: 'crosshair', afterDatasetsDraw(ch) {
+      plugins: [{ id: 'hover', afterEvent(ch, { event }) {
+        if (event.type === 'mouseout') {
+          ch.$pointerY = null;
+          highlight(ch, null);
+        } else if (event.type === 'mousemove' || event.type === 'touchmove' || event.type === 'touchstart') {
+          ch.$pointerY = event.y;
+          const inside = event.x >= ch.chartArea.left && event.x <= ch.chartArea.right;
+          highlight(ch, inside ? lineAt(ch, event.x, event.y) : null);
+        }
+      } }, { id: 'crosshair', afterDatasetsDraw(ch) {
+        // Dashed line under the pointer, as in the tooltip's column
         const active = ch.tooltip && ch.tooltip.getActiveElements();
         if (!active || !active.length) return;
         const x = active[0].element.x;
@@ -217,6 +290,8 @@
         ctx.restore();
       } }]
     });
+    langChart.$hot = null;
+    langChart.$order = order;
   }
 
   // ---- results table ----------------------------------------------------------------------------

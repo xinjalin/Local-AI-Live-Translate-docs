@@ -40,6 +40,24 @@
 .lt-legend button[aria-pressed="false"] { color: var(--lt-muted); opacity: .6; }
 .lt-legend button[aria-pressed="false"] .lt-dot { background: transparent !important; box-shadow: inset 0 0 0 1.5px currentColor; }
 
+/* Language chart tooltip: the model name and its score in separate columns, best first. When a line is
+   hovered its row is picked out and the rest fade, like the lines. */
+.lt-tip { position: absolute; top: 0; left: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .12s;
+  min-width: 13.5rem; padding: .55rem .35rem .4rem; border-radius: .4rem; background: var(--lt-tooltip); color: var(--lt-tooltip-text);
+  border: 1px solid rgba(255, 255, 255, .1); box-shadow: 0 10px 28px rgba(0, 0, 0, .45); font-size: .62rem; line-height: 1.25; }
+.lt-tip-head { display: flex; align-items: baseline; gap: .45rem; padding: 0 .4rem .4rem; margin-bottom: .25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .12); font-weight: 600; font-size: .66rem; }
+.lt-tip-note { font-weight: 500; font-size: .56rem; color: #fbbf24; }
+.lt-tip-unit { margin-left: auto; font-weight: 500; font-size: .56rem; color: rgba(255, 255, 255, .55); }
+.lt-tip-row { display: grid; grid-template-columns: .55rem 1fr auto; align-items: center; column-gap: .55rem;
+  padding: .2rem .4rem; border-radius: .25rem; transition: opacity .12s; }
+.lt-tip-row .lt-dot { width: .55rem; height: .55rem; border-radius: 50%; }
+.lt-tip-name { white-space: nowrap; }
+.lt-tip-q { margin-left: .3rem; color: rgba(255, 255, 255, .55); }
+.lt-tip-val { min-width: 2.4rem; margin-left: .8rem; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.lt-tip-hot { background: rgba(255, 255, 255, .12); }
+.lt-tip-dim { opacity: .5; }
+
 /* Results table: quiet header, hairline rows, rings for chrF */
 .lt-table-wrap { overflow-x: auto; }
 .md-typeset table.lt-table:not([class*="highlight"]) { display: table; width: 100%; border: 0; box-shadow: none; background: none;
