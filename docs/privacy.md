@@ -9,7 +9,7 @@
   context) — or, with a Qwen LiveTranslate model, the tab's audio — is sent to that provider under its
   terms. The popup's footer says *Cloud AI providers on* while the setting is on. See
   [Cloud providers & API keys](guide/cloud-providers.md), including how API keys are kept and cleared.
-- **The app server only accepts the extension.** It listens on your PC only (`127.0.0.1`), and refuses
+- **The app server only accepts the extension.** It only listens on your PC (`127.0.0.1`) and refuses
   connections from web pages, so a site open in your browser can't use it or read what it reports.
 - **Transcripts** are off by default. When you turn them on, they're saved as files in the app's
   `transcripts/` folder on your PC — nowhere else.

@@ -6,9 +6,9 @@ hide:
 
 # Translation models
 
-Which local model to load in LM Studio. Every model runs through the app's own translator — the same
-prompt templates and settings the app uses — on the same test sentences, so the numbers compare
-directly. Quality is **chrF** (higher is better; differences of a point or two are within noise).
+Which local model should you load in LM Studio? Every model here was run through the app's own
+translator — with the same prompt templates and settings the app uses — on the same test sentences, so
+the numbers compare directly. Quality is **chrF** (higher is better; differences of a point or two are within noise).
 How it's measured: [How we benchmark](benchmark-method.md).
 
 <div id="lt-dashboard" data-src="../data/benchmarks.json" markdown="0">
@@ -33,7 +33,7 @@ How it's measured: [How we benchmark](benchmark-method.md).
     <div class="lt-panel-head">
       <div>
         <h2 id="by-language">By language</h2>
-        <p class="lt-sub">chrF for each language, best-translated first. Hover to compare the models at one language; click a model to show or hide it. Faded names are languages the app doesn't offer yet.</p>
+        <p class="lt-sub">chrF for each language, best-translated first. Hover to compare the models at one language; click a model to show or hide it. * marks languages the app doesn't offer yet.</p>
       </div>
       <div class="lt-toolbar">
         <div class="lt-seg" id="lt-dir-lang"><button data-v="into" class="lt-on">Into English</button><button data-v="from">From English</button></div>

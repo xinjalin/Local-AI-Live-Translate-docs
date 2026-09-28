@@ -22,7 +22,7 @@ providers — Qwen, OpenAI, Anthropic, DeepSeek, Google Gemini and xAI Grok — 
 - **24 languages**, including Cantonese as a video language, with the original line alongside the
   translation if you like.
 - **Fast:** a finished subtitle typically appears about a second after the speaker stops.
-- **Private:** everything runs on your PC. Nothing is sent online unless you turn on an online provider.
+- **Private:** everything runs on your PC, and nothing is sent online unless you turn on an online provider.
 - **Speaker labels** (*Person 1*, *Person 2* …), saved **profiles** and **display configs**,
   **themes** including your own, and a popup in **10 languages**.
 
@@ -37,15 +37,16 @@ Chrome extension ──audio──> Local AI Live Translate server ──> LM St
 - Silero VAD cuts the audio into sentences (with 0.2 s of pre-roll so the first syllable isn't
   clipped), and SenseVoice, Dolphin, Omnilingual or Whisper-Small transcribes them on the CPU
   ([Speech engines](models/speech-engines.md)).
-- Lines already in the target language skip the LLM; Chinese ⇄ Chinese is converted instantly with
-  OpenCC (Taiwan phrasing for Traditional Chinese). Everything else is translated by the local LLM,
-  with the previous 4 lines as context so names, pronouns and misheard words come out right.
+- Lines already in the subtitle language skip the LLM, and Chinese is converted between Traditional
+  and Simplified instantly with OpenCC (with Taiwan phrasing for Traditional Chinese). Everything else
+  is translated by the local LLM, with the previous 4 lines as context so that names, pronouns and
+  misheard words come out right.
 - Recognition and translation run in parallel, and the LLM is called over one kept-alive
   connection, so a finished subtitle typically appears 0.7–1.0 s after the speaker stops.
 - With **Label speakers** on, each line also gets a voice fingerprint (3D-Speaker CAM++), computed
   on its own thread at the same time as the speech recognition, so lines don't arrive any later.
   The fingerprint is compared with the voices heard so far: a close match gets that person's
-  number, a new voice becomes the next *Person n*.
+  number, and a new voice becomes the next *Person n*.
 
 The server window logs each line as it's recognised (with the language and speaker) and translated
 (with the model's time and speed):

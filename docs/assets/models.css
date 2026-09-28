@@ -4,12 +4,12 @@
 #lt-dashboard { color: var(--lt-text); }
 
 .lt-meta { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0 1rem; }
-.lt-chip { padding: .2rem .65rem; border-radius: 999px; font-size: .62rem; background: var(--lt-card); color: var(--lt-muted); }
+.lt-chip { padding: .2rem .6rem; border-radius: .3rem; font-size: .62rem; background: var(--lt-card); color: var(--lt-muted); }
 
 /* Summary cards: big number, label above, detail below; two of them highlighted in pale blue */
 .lt-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .9rem; margin-bottom: 1rem; }
 @media (max-width: 60em) { .lt-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.lt-kpi { padding: 1.05rem 1.1rem; border-radius: .9rem; background: var(--lt-card); min-width: 0; }
+.lt-kpi { padding: 1.05rem 1.1rem; border-radius: .55rem; background: var(--lt-card); min-width: 0; }
 .lt-kpi.lt-hi-1 { background: var(--lt-hi-1); color: var(--lt-hi-text); }
 .lt-kpi.lt-hi-2 { background: var(--lt-hi-2); color: var(--lt-hi-text); }
 .lt-kpi-label { font-size: .66rem; font-weight: 600; }
@@ -19,14 +19,14 @@
 .lt-kpi-model { font-size: .66rem; font-weight: 600; opacity: .9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* Panels */
-.lt-panel { background: var(--lt-card); border-radius: .9rem; padding: 1rem 1.1rem 1.1rem; margin: 0 0 1rem; }
+.lt-panel { background: var(--lt-card); border-radius: .55rem; padding: 1rem 1.1rem 1.1rem; margin: 0 0 1rem; }
 .lt-panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: .6rem 1rem; margin-bottom: .6rem; }
 .md-typeset .lt-panel h2 { margin: 0; font-size: .82rem; font-weight: 600; letter-spacing: 0; color: var(--lt-text); }
 .md-typeset .lt-sub { margin: .2rem 0 0; font-size: .62rem; color: var(--lt-muted); max-width: 38rem; }
 .lt-toolbar { display: flex; flex-wrap: wrap; gap: .5rem; }
-.lt-seg { display: inline-flex; padding: .15rem; border-radius: .55rem; background: var(--lt-card-2); }
+.lt-seg { display: inline-flex; padding: .15rem; border-radius: .4rem; background: var(--lt-card-2); }
 .lt-seg button { border: 0; background: transparent; color: var(--lt-muted); font: inherit; font-size: .6rem; font-weight: 600;
-  padding: .28rem .6rem; border-radius: .42rem; cursor: pointer; white-space: nowrap; }
+  padding: .28rem .6rem; border-radius: .28rem; cursor: pointer; white-space: nowrap; }
 .lt-seg button.lt-on { background: var(--lt-bg); color: var(--lt-text); box-shadow: 0 1px 2px rgba(0, 0, 0, .18); }
 .lt-seg button:focus-visible { outline: 2px solid var(--lt-accent); outline-offset: 1px; }
 .lt-chart { position: relative; height: 19rem; }
@@ -35,7 +35,7 @@
 /* Model toggles for the language chart */
 .lt-legend { display: flex; flex-wrap: wrap; gap: .35rem; margin: .2rem 0 .7rem; }
 .lt-legend button { display: inline-flex; align-items: center; gap: .35rem; border: 1px solid var(--lt-line); background: transparent;
-  color: var(--lt-text); font: inherit; font-size: .6rem; padding: .22rem .6rem; border-radius: 999px; cursor: pointer; }
+  color: var(--lt-text); font: inherit; font-size: .6rem; padding: .22rem .6rem; border-radius: .3rem; cursor: pointer; }
 .lt-legend button .lt-dot { width: .5rem; height: .5rem; border-radius: 50%; }
 .lt-legend button[aria-pressed="false"] { color: var(--lt-muted); opacity: .6; }
 .lt-legend button[aria-pressed="false"] .lt-dot { background: transparent !important; box-shadow: inset 0 0 0 1.5px currentColor; }
@@ -57,7 +57,7 @@
 .lt-model .lt-dot { width: .5rem; height: .5rem; border-radius: 50%; flex: none; }
 .lt-name { font-weight: 600; }
 .lt-q { margin-left: .3rem; font-size: .58rem; color: var(--lt-muted); }
-.lt-tag { display: inline-block; margin-top: .15rem; padding: .05rem .45rem; border-radius: 999px; font-size: .52rem; font-weight: 600;
+.lt-tag { display: inline-block; margin-top: .15rem; padding: .05rem .45rem; border-radius: .25rem; font-size: .52rem; font-weight: 600;
   background: var(--lt-hi-1); color: var(--lt-hi-text); }
 .lt-tag-fastest { background: color-mix(in srgb, var(--lt-positive) 22%, transparent); color: var(--lt-text); }
 .lt-tag-most { background: var(--lt-hi-2); }

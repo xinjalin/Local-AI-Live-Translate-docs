@@ -7,8 +7,8 @@
 
 ## Subtitle appearance
 
-The **Display** tab sets the subtitles' colours, background opacity (0 % = no box at all), 7 font
-sizes, 8 system fonts, text weight and shadow or outline, with a live preview.
+The **Display** tab sets the subtitles' colours, background opacity (0 % means no box at all), font
+size (7 sizes), font (8 system fonts), text weight, and shadow or outline, with a live preview.
 
 ## Subtitle layout
 
@@ -18,7 +18,7 @@ sizes, 8 system fonts, text weight and shadow or outline, with a live preview.
 - **History lines:** show the latest line only, or one or two earlier lines too.
 - **Keep subtitle box on screen:** keeps the box visible between lines.
 
-How long each line stays up is on the Tuning tab: *Extra Time On Screen* and *Minimum Display Time*.
+How long each line stays up is set on the Tuning tab: *Extra Time On Screen* and *Minimum Display Time*.
 
 ## Themes
 

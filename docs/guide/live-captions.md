@@ -11,8 +11,8 @@ Indonesian, Vietnamese, Thai, Malay, Filipino, Hindi, Bengali or Arabic, and the
   Chinese subtitles (呢幾個字都表達唔到 → 這幾個字都表達不了), not just converted character by
   character. It isn't offered as a subtitle language: the recommended model writes formal Chinese
   rather than colloquial Cantonese.
-- **Bilingual Mode** shows the original line with the translation. Where it goes and how big it is:
-  [Subtitle display](display.md).
+- **Bilingual Mode** shows the original line with the translation. To change where it goes and how
+  big it is, see [Subtitle display](display.md).
 
 The popup itself is available in Chinese (Traditional and Simplified), English, Japanese, Korean,
 Spanish, French, German, Russian and Indonesian.
@@ -42,8 +42,8 @@ captions.
 
 *Speaker Separation* (Tuning tab, shown while it's on) sets how different two voices must be to count
 as two people: raise it if two people get the same number, lower it if one person gets split into two.
-It works best on clear speech; music, laughter or two people talking at once can confuse it, and a very
-short line (under 1 s) keeps the previous speaker's number.
+It works best on clear speech: music, laughter or two people talking at once can confuse it, and a
+very short line (under 1 s) keeps the previous speaker's number.
 
 ## Keyboard shortcut
 

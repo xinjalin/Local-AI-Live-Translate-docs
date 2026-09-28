@@ -25,8 +25,8 @@
     - **Speech recognition** — Whisper-Small is the slowest engine; see [Speech engines](models/speech-engines.md).
 
 ??? question "Words are misheard, or a language isn't recognised"
-    Set the video language instead of *Auto Detect*: SenseVoice's auto-detect only knows Chinese,
-    Cantonese, English, Japanese and Korean. For noisy videos, raise the Speech Detection Threshold
+    Set the video language instead of *Auto Detect*: SenseVoice's automatic detection only knows
+    Chinese, Cantonese, English, Japanese and Korean. For noisy videos, raise the Speech Detection Threshold
     ([Tuning](guide/tuning.md)).
 
 ??? question "Two people get the same speaker number (or one person gets two)"

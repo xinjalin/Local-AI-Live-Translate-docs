@@ -10,7 +10,7 @@ always converted to the chosen script (Traditional or Simplified), whatever the 
 
 ## The app's templates
 
-They're the three files in the app's `templates/` folder:
+These are the three files in the app's `templates/` folder:
 
 | File | Template | Used automatically for | What it sends |
 |---|---|---|---|

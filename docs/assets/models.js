@@ -84,13 +84,13 @@
   function chartDefaults() {
     Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
     Chart.defaults.font.size = 11;
-    Chart.defaults.color = token('--lt-muted');
+    Chart.defaults.color = token('--lt-text');
     return {
       grid: token('--lt-line'),
       text: token('--lt-text'),
       tooltip: {
         backgroundColor: token('--lt-tooltip'), titleColor: token('--lt-tooltip-text'), bodyColor: token('--lt-tooltip-text'),
-        borderColor: 'rgba(255,255,255,.08)', borderWidth: 1, padding: 10, cornerRadius: 8, boxPadding: 4, usePointStyle: true
+        borderColor: 'rgba(255,255,255,.08)', borderWidth: 1, padding: 10, cornerRadius: 5, boxPadding: 4, usePointStyle: true
       }
     };
   }
@@ -173,12 +173,12 @@
     const mean = (l) => data.models.reduce((s, m) => s + m[key][l], 0) / data.models.length;
     const order = [...langs].sort((a, b) => mean(b) - mean(a));
     const models = data.models.filter(m => state.visible.has(m.id));
-    const faded = alpha(look.text.startsWith('#') ? look.text : '#888888', 0.3);
     if (langChart) langChart.destroy();
     langChart = new Chart(document.getElementById('lt-lang-chart'), {
       type: 'line',
       data: {
-        labels: order.map(l => data.names[l]),
+        // (* = a language the app doesn't offer yet)
+        labels: order.map(l => data.names[l] + (data.inApp.includes(l) ? '' : ' *')),
         datasets: models.map(m => ({
           label: label(m), data: order.map(l => m[key][l]), borderColor: colorOf(m), backgroundColor: colorOf(m),
           borderWidth: 2, cubicInterpolationMode: 'monotone', pointRadius: 0, pointHoverRadius: 4, pointHitRadius: 8
@@ -190,8 +190,7 @@
         interaction: { mode: 'index', intersect: false },
         scales: {
           x: { grid: { display: false }, border: { display: false },
-               ticks: { autoSkip: false, maxRotation: 55, minRotation: key === 'into' ? 55 : 0, font: { size: 10.5 },
-                        color: c => data.inApp.includes(order[c.index]) ? token('--lt-muted') : faded } },
+               ticks: { autoSkip: false, maxRotation: 55, minRotation: key === 'into' ? 55 : 0, font: { size: 10.5 } } },
           y: { title: { display: true, text: key === 'into' ? 'chrF into English' : 'chrF from English' },
                grid: { color: look.grid }, border: { display: false } }
         },
