@@ -24,22 +24,26 @@ How long each line stays up is set on the Tuning tab: *Extra Time On Screen* and
 
 The popup comes in:
 
-- **Dark**, **Light** and **Hybrid** (dark shell with light panels);
-- **Sakura Light** and **Sakura Dark** — cherry-blossom pinks on a blush page or a plum night;
+- **Dark** and **Light** (the default): flat charcoal or white surfaces with a pale-blue status card,
+  squarer corners and sentence-case titles — the same look as this site;
+- **Glass Dark** and **Glass Light**: a glowing lavender background with see-through panels;
+- **Sakura Light** and **Sakura Dark**: cherry-blossom pinks on a blush page or a plum night, in the
+  glass style;
 - the OLED family with a blue accent: **OLED Light** (white), **OLED Dim** (dark navy) and
-  **OLED Black** (true black `#000`, no background glow: on OLED / AMOLED screens black pixels are
-  switched off);
-- **System**, which follows Windows' light or dark setting;
+  **OLED Black** (true black `#000`, with no background glow: on OLED and AMOLED screens, black pixels
+  are switched off);
+- **System**, which follows Windows' light or dark setting (with Light or Dark);
 - **Custom**, your own.
 
-Themes only change colours; the layout is the same in all of them.
+Dark and Light also change the popup's layout (corners and titles); the other themes only change
+colours.
 
 ### Custom theme
 
 Pick **Custom** and set:
 
-- **Style:** **Glass** (glowing background, see-through panels, like Dark and Light) or **Flat**
-  (solid surfaces, like the OLED themes);
+- **Style:** **Studio** (the layout of Dark and Light), **Glass** (glowing background and see-through
+  panels, like Glass Dark and Glass Light) or **Flat** (solid surfaces, like the OLED themes);
 - **Start from:** any built-in theme, as a starting point;
 - **Colours:** background, panels, accent and buttons;
 - **Text:** headings, labels, text, hints and dropdowns.
