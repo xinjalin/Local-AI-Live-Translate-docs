@@ -1,0 +1,50 @@
+/* Translation model dashboard (models.js). Colours come from Material's own variables, so it follows
+   the site's light / dark scheme. */
+
+.lt-meta { display: flex; flex-wrap: wrap; gap: .4rem; margin: .6rem 0 1.2rem; }
+.lt-chip { padding: .15rem .6rem; border-radius: 999px; font-size: .68rem;
+  background: var(--md-code-bg-color); color: var(--md-default-fg-color--light); }
+
+.lt-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: .8rem; margin-bottom: 1.4rem; }
+.lt-card { padding: .8rem .9rem; border-radius: .6rem; border: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-default-bg-color); }
+.lt-card.lt-rec { border-color: var(--md-primary-fg-color); box-shadow: 0 0 0 .15rem color-mix(in srgb, var(--md-primary-fg-color) 18%, transparent); }
+.lt-k { font-size: .6rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--md-default-fg-color--light); }
+.lt-v { font-size: .9rem; font-weight: 700; margin: .2rem 0 .1rem; }
+.lt-d { font-size: .65rem; color: var(--md-default-fg-color--light); margin-top: .25rem; }
+
+.lt-panel { border: 1px solid var(--md-default-fg-color--lightest); border-radius: .6rem; padding: .9rem 1rem; margin: 0 0 1.2rem; }
+.lt-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-bottom: .6rem; font-size: .65rem;
+  color: var(--md-default-fg-color--light); }
+.lt-seg { display: inline-flex; padding: .12rem; border-radius: 999px; background: var(--md-code-bg-color); }
+.lt-seg button { border: 0; background: transparent; color: var(--md-default-fg-color--light); font: inherit;
+  font-weight: 600; padding: .25rem .65rem; border-radius: 999px; cursor: pointer; }
+.lt-seg button.lt-on { background: var(--md-default-bg-color); color: var(--md-accent-fg-color); box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+.lt-chart { position: relative; height: 20rem; }
+
+.md-typeset table.lt-table:not([class*="highlight"]) { display: table; width: 100%; font-size: .66rem; }
+.md-typeset .lt-table th { cursor: pointer; user-select: none; white-space: nowrap; }
+.md-typeset .lt-table td { white-space: nowrap; }
+.md-typeset .lt-table .lt-num { text-align: right; font-variant-numeric: tabular-nums; }
+.md-typeset .lt-table th.lt-sorted::after { content: " ▾"; }
+.md-typeset .lt-table th.lt-sorted.lt-asc::after { content: " ▴"; }
+.lt-name { font-weight: 600; }
+.lt-q { margin-left: .3rem; font-size: .6rem; color: var(--md-default-fg-color--light); }
+.lt-tag { margin-left: .4rem; padding: .05rem .45rem; border-radius: 999px; font-size: .55rem; font-weight: 700; white-space: nowrap;
+  background: color-mix(in srgb, var(--md-primary-fg-color) 14%, transparent); color: var(--md-typeset-a-color); }
+.lt-tag-fastest { background: rgba(16, 185, 129, .15); color: #059669; }
+.lt-bar { display: inline-block; height: .3rem; margin-left: .4rem; border-radius: .15rem; vertical-align: middle;
+  background: var(--md-primary-fg-color); opacity: .6; }
+.lt-warn { color: #d97706; cursor: help; }
+
+.lt-heat-wrap { overflow-x: auto; }
+.md-typeset table.lt-heat:not([class*="highlight"]) { display: table; border: 0; border-collapse: separate; border-spacing: 2px;
+  font-size: .6rem; box-shadow: none; }
+.md-typeset .lt-heat th { border: 0; padding: 0 .1rem .3rem; vertical-align: bottom; font-weight: 600; background: none; min-width: 0; }
+.md-typeset .lt-heat th span { writing-mode: vertical-rl; transform: rotate(180deg); display: inline-block; white-space: nowrap; }
+.md-typeset .lt-heat th.lt-rowh { text-align: right; white-space: nowrap; padding-right: .5rem; vertical-align: middle; }
+.md-typeset .lt-heat th.lt-notapp { opacity: .45; }
+.md-typeset .lt-heat td { border: 0; min-width: 1.7rem; height: 1.3rem; padding: 0; text-align: center; border-radius: .25rem;
+  color: #111; font-weight: 600; font-variant-numeric: tabular-nums; }
+.lt-legend { display: flex; align-items: center; gap: .5rem; font-size: .62rem; color: var(--md-default-fg-color--light); margin-top: .5rem; }
+.lt-legend .lt-grad { width: 8rem; height: .4rem; border-radius: .2rem; background: linear-gradient(90deg, rgb(239,68,68), rgb(234,179,8), rgb(16,185,129)); }

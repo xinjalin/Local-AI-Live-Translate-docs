@@ -1,0 +1,45 @@
+{
+  "_about": "How each benchmarked model is shown on the site. Keys are the LM Studio model keys in results/translation.jsonl. tag: recommended / fastest / most accurate from English (shown as cards). note: one line for the table.",
+  "hardware": "RX 9070 XT · 16 GB · LM Studio (Vulkan)",
+  "models": {
+    "hy-mt2-7b": {
+      "name": "Hy-MT2-7B", "quant": "Q8_0", "gb": 8.0, "family": "Tencent Hy-MT2",
+      "source": "tencent/Hy-MT2-7B-GGUF", "tag": "recommended",
+      "note": "Best balance of accuracy and speed; fits 16 GB with room to spare."
+    },
+    "unsloth/hy-mt2-7b": {
+      "name": "Hy-MT2-7B", "quant": "BF16", "gb": 15.0, "family": "Tencent Hy-MT2",
+      "source": "unsloth", "note": "Same accuracy as the Q8_0, but too big for 16 GB of VRAM: 5–6× slower."
+    },
+    "hy-mt2-30b-a3b-i1": {
+      "name": "Hy-MT2-30B-A3B", "quant": "i1-IQ3_M", "gb": 13.3, "family": "Tencent Hy-MT2",
+      "source": "mradermacher", "tag": "most accurate from English",
+      "note": "No more accurate into English than the 7B, and twice as slow; slightly ahead from English."
+    },
+    "hy-mt2-1.8b@q8_0": {
+      "name": "Hy-MT2-1.8B", "quant": "Q8_0", "gb": 1.9, "family": "Tencent Hy-MT2",
+      "source": "unsloth", "tag": "fastest",
+      "note": "About 3 points less accurate into English than the 7B, at 0.2 s a line: for GPUs with little VRAM."
+    },
+    "hy-mt2-1.8b@bf16": {
+      "name": "Hy-MT2-1.8B", "quant": "BF16", "gb": 3.6, "family": "Tencent Hy-MT2",
+      "source": "unsloth", "note": "No more accurate than its Q8_0, and slower."
+    },
+    "milmmt-46-12b-v1.0": {
+      "name": "MiLMMT-46-12B", "quant": "Q6_K", "gb": 9.7, "family": "Xiaomi MiLMMT",
+      "source": "mradermacher", "note": "Uses its own prompt template automatically; writes colloquial Cantonese."
+    },
+    "milmmt-46-4b-v1.0": {
+      "name": "MiLMMT-46-4B", "quant": "Q8_0", "gb": 4.1, "family": "Xiaomi MiLMMT",
+      "source": "mradermacher", "note": "Fast, 2–3 points less accurate; own prompt template."
+    },
+    "google/gemma-4-12b": {
+      "name": "Gemma-4-12B", "quant": "Q8_0", "gb": 12.7, "family": "Google Gemma",
+      "source": "google", "note": "Doesn't fit fully in 16 GB of VRAM."
+    },
+    "qwen/qwen3.5-9b": {
+      "name": "Qwen3.5-9B", "quant": "Q8_0", "gb": 9.5, "family": "Qwen",
+      "source": "qwen", "note": "Thinking is switched off automatically."
+    }
+  }
+}

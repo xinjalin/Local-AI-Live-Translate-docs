@@ -1,0 +1,90 @@
+site_name: Local AI Live Translate
+site_description: Real-time translated subtitles for any video in Chrome, with speech recognition and translation on your own PC. Guides and translation model benchmarks.
+site_url: https://xinjalin.github.io/Local-AI-Live-Translate-docs/
+site_author: xinjalin
+repo_url: https://github.com/xinjalin/Local-AI-Live-Translate
+repo_name: xinjalin/Local-AI-Live-Translate
+edit_uri: https://github.com/xinjalin/Local-AI-Live-Translate-docs/edit/main/docs/
+copyright: Local AI Live Translate by xinjalin · MIT License
+
+theme:
+  name: material
+  logo: images/logo.png
+  favicon: images/logo.png
+  font:
+    text: Plus Jakarta Sans
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/weather-night
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/weather-sunny
+        name: Light mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Install: getting-started/install.md
+      - Quick start: getting-started/quick-start.md
+      - Updating: getting-started/updating.md
+  - Models:
+      - Translation models: models/index.md
+      - Speech engines: models/speech-engines.md
+      - How we benchmark: models/benchmark-method.md
+  - Guide:
+      - Live captions: guide/live-captions.md
+      - Profiles & import/export: guide/profiles.md
+      - Subtitle display & themes: guide/display.md
+      - Prompt templates: guide/prompt-templates.md
+      - Cloud providers & API keys: guide/cloud-providers.md
+      - Tuning: guide/tuning.md
+      - Server options: guide/server-options.md
+  - Troubleshooting: troubleshooting.md
+  - Privacy: privacy.md
+  - Development: development.md
+  - Credits & licences: credits.md
+
+extra_css:
+  - assets/site.css
+  - assets/models.css
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js
+  - assets/models.js
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.keys
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/xinjalin/Local-AI-Live-Translate

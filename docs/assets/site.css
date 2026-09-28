@@ -1,0 +1,24 @@
+/* Site-wide tweaks on top of Material */
+
+/* The app's lavender for links and the header in both schemes */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #6d28d9;
+  --md-primary-fg-color--light: #8b5cf6;
+  --md-primary-fg-color--dark: #5b21b6;
+  --md-accent-fg-color: #7c3aed;
+  --md-typeset-a-color: #6d28d9;
+}
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #2d2939;
+  --md-primary-fg-color--light: #3b3549;
+  --md-primary-fg-color--dark: #16151c;
+  --md-accent-fg-color: #b69cff;
+  --md-typeset-a-color: #b69cff;
+  --md-default-bg-color: #0f0e14;
+}
+
+/* Screenshots side by side */
+.md-typeset .shots { display: flex; flex-wrap: wrap; gap: .8rem; align-items: flex-start; }
+.md-typeset .shots img { border-radius: .5rem; box-shadow: 0 .3rem 1rem rgba(0, 0, 0, .18); }
+.md-typeset .lt-sub { font-size: .68rem; color: var(--md-default-fg-color--light); margin: 0 0 .6rem; }
+.md-typeset .lt-panel h2 { margin-top: 0; }
