@@ -16,6 +16,8 @@
   --lt-warn: #d97706;
   --lt-tooltip: #1c1c1c;
   --lt-tooltip-text: #ffffff;
+  --lt-nav-link: rgba(28, 28, 28, 0.78);
+  --lt-nav-label: rgba(28, 28, 28, 0.45);
 
   --md-primary-fg-color: #1c1c1c;
   --md-primary-fg-color--light: #3a3a3a;
@@ -41,6 +43,8 @@
   --lt-warn: #fbbf24;
   --lt-tooltip: #050505;
   --lt-tooltip-text: #ffffff;
+  --lt-nav-link: rgba(255, 255, 255, 0.8);
+  --lt-nav-label: rgba(255, 255, 255, 0.42);
 
   --md-hue: 0;
   --md-primary-fg-color: #111111;
@@ -92,3 +96,44 @@
 /* Screenshots side by side */
 .md-typeset .shots { display: flex; flex-wrap: wrap; gap: .8rem; align-items: flex-start; }
 .md-typeset .shots img { border-radius: .4rem; box-shadow: 0 .3rem 1rem rgba(0, 0, 0, .18); }
+
+/* Sidebar: section headings are small grey labels, pages are links with a hover highlight, and the
+   current page is a highlighted row with an accent bar (desktop layout; the phone menu keeps
+   Material's own). */
+@media screen and (min-width: 76.25em) {
+  .md-nav--primary > .md-nav__title {
+    font-size: .62rem;
+    font-weight: 700;
+    color: var(--lt-nav-label);
+  }
+  .md-nav--primary .md-nav__item--section > .md-nav__link {
+    margin-top: 1.1rem;
+    padding: 0 .6rem;
+    font-size: .56rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--lt-nav-label);
+    cursor: default;
+  }
+  .md-nav--primary .md-nav__item--section > .md-nav > .md-nav__list { margin-top: .25rem; }
+  .md-nav--primary .md-nav__item--section > .md-nav > .md-nav__list > .md-nav__item { padding: 0; }
+  .md-nav--primary a.md-nav__link {
+    margin-top: .1rem;
+    padding: .3rem .6rem;
+    border-radius: .3rem;
+    color: var(--lt-nav-link);
+    transition: background-color .15s ease, color .15s ease;
+  }
+  .md-nav--primary a.md-nav__link:hover,
+  .md-nav--primary a.md-nav__link:focus-visible {
+    background: var(--lt-card);
+    color: var(--lt-text);
+  }
+  .md-nav--primary a.md-nav__link--active {
+    background: var(--lt-card-2);
+    color: var(--lt-text);
+    font-weight: 600;
+    box-shadow: inset 2px 0 0 var(--lt-accent);
+  }
+}

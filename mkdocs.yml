@@ -33,7 +33,6 @@ theme:
     - navigation.sections
     - navigation.top
     - navigation.footer
-    - navigation.indexes
     - search.suggest
     - search.highlight
     - content.code.copy
@@ -57,10 +56,11 @@ nav:
       - Cloud providers & API keys: guide/cloud-providers.md
       - Tuning: guide/tuning.md
       - Server options: guide/server-options.md
-  - Troubleshooting: troubleshooting.md
-  - Privacy: privacy.md
-  - Development: development.md
-  - Credits & licences: credits.md
+  - More:
+      - Troubleshooting: troubleshooting.md
+      - Privacy: privacy.md
+      - Development: development.md
+      - Credits & licences: credits.md
 
 extra_css:
   - assets/site.css
