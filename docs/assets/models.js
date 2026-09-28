@@ -1,97 +1,124 @@
-// Translation model dashboard (docs/models/index.md): recommendation cards, quality vs speed chart,
-// results table and per-language heatmap, from docs/data/benchmarks.json (bench/build_benchmarks.py).
+// Translation model dashboard (docs/models/index.md): summary cards, quality vs speed chart, quality by
+// language chart and results table, from docs/data/benchmarks.json (bench/build_benchmarks.py).
 (function () {
   const root = document.getElementById('lt-dashboard');
   if (!root) return;
 
-  const css = (name) => getComputedStyle(document.body).getPropertyValue(name).trim();
+  const token = (name) => getComputedStyle(document.body).getPropertyValue(name).trim();
+  const dark = () => document.body.getAttribute('data-md-color-scheme') === 'slate';
   const label = (m) => `${m.name} ${m.quant}`;
   const fmtS = (ms) => (ms / 1000).toFixed(2) + ' s';
   const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const FAMILY = { 'Tencent Hy-MT2': '#7c3aed', 'Xiaomi MiLMMT': '#f97316', 'Google Gemma': '#0ea5e9', 'Qwen': '#10b981' };
-  const familyColor = (f) => FAMILY[f] || '#94a3b8';
 
-  let data, chart;
-  const state = { chartDir: 'intoEn', vram: 99, sortCol: 3, asc: false, heatDir: 'into' };
-  const shown = () => data.models.filter(m => m.gb <= state.vram);
+  // One colour per model, the same in every chart: pastels on the dark page, deeper tones on the light one.
+  const PALETTE = {
+    dark: ['#a8c5da', '#c6c7f8', '#baedbd', '#ffb3a7', '#f2a7e6', '#8ab4f8', '#f9c38b', '#ffe999', '#a1e3cb', '#d4d4d4'],
+    light: ['#4f7fa3', '#6366d1', '#3c9a48', '#dc6b5b', '#bf55ad', '#3b78d8', '#d0843a', '#a8891a', '#2f9e7a', '#737373']
+  };
+  const colorOf = (m) => PALETTE[dark() ? 'dark' : 'light'][data.models.indexOf(m) % 10];
+  const alpha = (hex, a) => hex + Math.round(a * 255).toString(16).padStart(2, '0');
+
+  let data, speedChart, langChart;
+  const state = { chartDir: 'intoEn', vram: 99, langDir: 'into', sortCol: 2, asc: false, visible: null };
 
   fetch(root.dataset.src).then(r => r.json()).then(d => {
     data = d;
-    document.getElementById('lt-meta').innerHTML = [
-      d.hardware, '24 FLORES sentences per language pair', `${d.toEn.length} languages → English · English → ${d.fromEn.length}`,
-      `Last run ${d.lastRun}`
-    ].map(t => `<span class="lt-chip">${esc(t)}</span>`).join('');
-    renderCards();
+    // The language chart starts with the highlighted models; the others can be switched on.
+    state.visible = new Set(d.models.filter(m => m.tag || m.id === 'milmmt-46-12b-v1.0').map(m => m.id));
+    document.getElementById('lt-meta').innerHTML = [d.hardware, '24 FLORES sentences per language pair', `Last run ${d.lastRun}`]
+      .map(t => `<span class="lt-chip">${esc(t)}</span>`).join('');
     wire();
     renderAll();
-    // Material's light / dark switch: redraw the chart and heatmap in the new colours
+    // Material's light / dark switch: redraw in the other palette
     new MutationObserver(renderAll).observe(document.body, { attributes: true, attributeFilter: ['data-md-color-scheme'] });
   }).catch(() => {
     root.innerHTML = '<p>The benchmark data couldn\'t be loaded.</p>';
   });
 
   function renderAll() {
-    drawChart();
+    renderKpis();
+    drawSpeedChart();
+    renderLegend();
+    drawLangChart();
     renderTable();
-    renderHeat();
   }
 
-  function renderCards() {
-    const order = ['recommended', 'fastest', 'most accurate from English'];
-    const titles = { recommended: 'Recommended', fastest: 'Fastest · little VRAM', 'most accurate from English': 'Most accurate from English' };
-    const cards = order.map(tag => data.models.find(m => m.tag === tag)).filter(Boolean);
-    document.getElementById('lt-cards').innerHTML = cards.map(m => `
-      <div class="lt-card ${m.tag === 'recommended' ? 'lt-rec' : ''}">
-        <div class="lt-k">${titles[m.tag]}</div>
-        <div class="lt-v">${esc(label(m))}</div>
-        <div class="lt-d">${m.intoEn} into English · ${m.fromEn} from English · ${fmtS(m.median)} / line · ${m.gb} GB</div>
-        <div class="lt-d">${esc(m.note || '')}</div>
-      </div>`).join('');
-  }
-
-  function segs(id, key, parse) {
+  function segs(id, key, parse, after) {
     document.querySelectorAll(`#${id} button`).forEach(b => b.addEventListener('click', () => {
       document.querySelectorAll(`#${id} button`).forEach(x => x.classList.toggle('lt-on', x === b));
       state[key] = parse ? parse(b.dataset.v) : b.dataset.v;
-      renderAll();
+      after();
     }));
   }
 
   function wire() {
-    segs('lt-dir-chart', 'chartDir');
-    segs('lt-vram', 'vram', Number);
-    segs('lt-dir-heat', 'heatDir');
+    segs('lt-dir-chart', 'chartDir', null, drawSpeedChart);
+    segs('lt-vram', 'vram', Number, drawSpeedChart);
+    segs('lt-dir-lang', 'langDir', null, drawLangChart);
   }
 
-  // Quality vs speed: up is more accurate, left is faster; bubble size is the file size.
-  function drawChart() {
-    const models = shown();
-    const families = [...new Set(data.models.map(m => m.family))];
-    const sets = families.map(fam => ({
-      label: fam, backgroundColor: familyColor(fam) + 'b3', borderColor: familyColor(fam),
-      data: models.filter(m => m.family === fam).map(m => ({ x: m.median, y: m[state.chartDir], r: 5 + m.gb * 1.3, m }))
-    })).filter(s => s.data.length);
-    if (chart) chart.destroy();
-    const text = css('--md-default-fg-color') || '#333';
-    const muted = css('--md-default-fg-color--light') || '#777';
-    const grid = css('--md-default-fg-color--lightest') || 'rgba(0,0,0,.08)';
+  // ---- summary cards ----------------------------------------------------------------------------
+
+  function renderKpis() {
+    const byTag = (tag) => data.models.find(m => m.tag === tag);
+    const rec = byTag('recommended');
+    const fast = byTag('fastest') || [...data.models].sort((a, b) => a.median - b.median)[0];
+    const from = byTag('most accurate from English') || [...data.models].sort((a, b) => b.fromEn - a.fromEn)[0];
+    const cards = [
+      ['lt-hi-1', 'Recommended', `${rec.intoEn}<small>chrF into English</small>`, label(rec), `${fmtS(rec.median)} a line · ${rec.gb} GB`],
+      ['', 'Fastest', `${fmtS(fast.median)}<small>a line</small>`, label(fast), `${fast.intoEn} chrF into English · ${fast.gb} GB`],
+      ['', 'Best from English', `${from.fromEn.toFixed(1)}<small>chrF</small>`, label(from), `${fmtS(from.median)} a line · ${from.gb} GB`],
+      ['lt-hi-2', 'Tested', `${data.models.length}<small>models</small>`, `${data.toEn.length} languages → English`, `and English → ${data.fromEn.length}`],
+    ];
+    document.getElementById('lt-kpis').innerHTML = cards.map(([cls, k, v, model, sub]) => `
+      <div class="lt-kpi ${cls}">
+        <div class="lt-kpi-label">${k}</div>
+        <div class="lt-kpi-value">${v}</div>
+        <div class="lt-kpi-model">${esc(model)}</div>
+        <div class="lt-kpi-sub">${esc(sub)}</div>
+      </div>`).join('');
+  }
+
+  // ---- shared chart look ------------------------------------------------------------------------
+
+  function chartDefaults() {
     Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
-    Chart.defaults.color = muted;
-    chart = new Chart(document.getElementById('lt-chart'), {
+    Chart.defaults.font.size = 11;
+    Chart.defaults.color = token('--lt-muted');
+    return {
+      grid: token('--lt-line'),
+      text: token('--lt-text'),
+      tooltip: {
+        backgroundColor: token('--lt-tooltip'), titleColor: token('--lt-tooltip-text'), bodyColor: token('--lt-tooltip-text'),
+        borderColor: 'rgba(255,255,255,.08)', borderWidth: 1, padding: 10, cornerRadius: 8, boxPadding: 4, usePointStyle: true
+      }
+    };
+  }
+
+  // ---- quality vs speed -------------------------------------------------------------------------
+
+  function drawSpeedChart() {
+    const look = chartDefaults();
+    const models = data.models.filter(m => m.gb <= state.vram);
+    if (speedChart) speedChart.destroy();
+    speedChart = new Chart(document.getElementById('lt-chart'), {
       type: 'bubble',
-      data: { datasets: sets },
+      data: { datasets: models.map(m => ({
+        label: label(m), backgroundColor: alpha(colorOf(m), 0.75), borderColor: colorOf(m), borderWidth: 1.5,
+        data: [{ x: m.median, y: m[state.chartDir], r: 5 + m.gb * 1.2, m }]
+      })) },
       options: {
         maintainAspectRatio: false,
         animation: false,
-        layout: { padding: { right: 140, top: 8 } },
+        layout: { padding: { right: 130, top: 10 } },
         scales: {
-          x: { type: 'logarithmic', title: { display: true, text: 'Median time per line (log scale)' }, grid: { color: grid },
+          x: { type: 'logarithmic', title: { display: true, text: 'Median time per line (log scale)' }, grid: { color: look.grid }, border: { display: false },
                ticks: { callback: v => [200, 300, 500, 1000, 2000, 3000, 5000].includes(v) ? (v / 1000) + ' s' : '' } },
-          y: { title: { display: true, text: state.chartDir === 'intoEn' ? 'chrF into English' : 'chrF from English' }, grid: { color: grid } }
+          y: { title: { display: true, text: state.chartDir === 'intoEn' ? 'chrF into English' : 'chrF from English' }, grid: { color: look.grid }, border: { display: false } }
         },
         plugins: {
-          legend: { position: 'bottom', labels: { usePointStyle: true } },
-          tooltip: { callbacks: { label: c => `${label(c.raw.m)}: ${c.raw.y} chrF · ${fmtS(c.raw.x)} · ${c.raw.m.gb} GB` } }
+          legend: { display: false },
+          tooltip: { ...look.tooltip, callbacks: { label: c => `${label(c.raw.m)}: ${c.raw.y} chrF · ${fmtS(c.raw.x)} · ${c.raw.m.gb} GB` } }
         }
       },
       // Model names beside their bubbles, nudged down when they'd overlap one already placed
@@ -99,10 +126,10 @@
         const ctx = ch.ctx;
         ctx.save();
         ctx.font = `600 11px ${Chart.defaults.font.family}`;
-        ctx.fillStyle = text;
+        ctx.fillStyle = look.text;
         const labels = [];
         ch.data.datasets.forEach((ds, i) => ch.getDatasetMeta(i).data.forEach((pt, j) => {
-          labels.push({ text: label(ds.data[j].m), x: pt.x + ds.data[j].r + 4, y: pt.y + 4 });
+          labels.push({ text: ds.label, x: pt.x + ds.data[j].r + 5, y: pt.y + 4 });
         }));
         labels.sort((a, b) => a.y - b.y);
         const placed = [];
@@ -117,55 +144,122 @@
     });
   }
 
+  // ---- quality by language ----------------------------------------------------------------------
+
+  function renderLegend() {
+    const el = document.getElementById('lt-lang-legend');
+    el.innerHTML = data.models.map(m => `
+      <button type="button" data-id="${esc(m.id)}" aria-pressed="${state.visible.has(m.id)}">
+        <span class="lt-dot" style="background:${colorOf(m)}"></span>${esc(label(m))}
+      </button>`).join('');
+    el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+      const id = b.dataset.id;
+      if (state.visible.has(id)) {
+        if (state.visible.size > 1) state.visible.delete(id);
+      } else {
+        state.visible.add(id);
+      }
+      renderLegend();
+      drawLangChart();
+    }));
+  }
+
+  function drawLangChart() {
+    const look = chartDefaults();
+    const key = state.langDir;
+    const langs = key === 'into' ? data.toEn : data.fromEn;
+    // Best-translated languages first (averaged over every model, so the order doesn't jump when
+    // models are switched on or off)
+    const mean = (l) => data.models.reduce((s, m) => s + m[key][l], 0) / data.models.length;
+    const order = [...langs].sort((a, b) => mean(b) - mean(a));
+    const models = data.models.filter(m => state.visible.has(m.id));
+    const faded = alpha(look.text.startsWith('#') ? look.text : '#888888', 0.3);
+    if (langChart) langChart.destroy();
+    langChart = new Chart(document.getElementById('lt-lang-chart'), {
+      type: 'line',
+      data: {
+        labels: order.map(l => data.names[l]),
+        datasets: models.map(m => ({
+          label: label(m), data: order.map(l => m[key][l]), borderColor: colorOf(m), backgroundColor: colorOf(m),
+          borderWidth: 2, cubicInterpolationMode: 'monotone', pointRadius: 0, pointHoverRadius: 4, pointHitRadius: 8
+        }))
+      },
+      options: {
+        maintainAspectRatio: false,
+        animation: false,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          x: { grid: { display: false }, border: { display: false },
+               ticks: { autoSkip: false, maxRotation: 55, minRotation: key === 'into' ? 55 : 0, font: { size: 10.5 },
+                        color: c => data.inApp.includes(order[c.index]) ? token('--lt-muted') : faded } },
+          y: { title: { display: true, text: key === 'into' ? 'chrF into English' : 'chrF from English' },
+               grid: { color: look.grid }, border: { display: false } }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...look.tooltip, itemSort: (a, b) => b.raw - a.raw,
+                     callbacks: { label: c => ` ${c.dataset.label}  ${c.raw}` } }
+        }
+      },
+      // Dashed line under the pointer, as in the tooltip's column
+      plugins: [{ id: 'crosshair', afterDatasetsDraw(ch) {
+        const active = ch.tooltip && ch.tooltip.getActiveElements();
+        if (!active || !active.length) return;
+        const x = active[0].element.x;
+        const { top, bottom } = ch.chartArea;
+        const ctx = ch.ctx;
+        ctx.save();
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = token('--lt-muted');
+        ctx.beginPath();
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, bottom);
+        ctx.stroke();
+        ctx.restore();
+      } }]
+    });
+  }
+
+  // ---- results table ----------------------------------------------------------------------------
+
+  function ring(v) {
+    const c = 2 * Math.PI * 7;
+    const fill = Math.max(0, Math.min(1, v / 100)) * c;
+    return `<span class="lt-ring"><svg viewBox="0 0 18 18" aria-hidden="true"><circle class="lt-track" cx="9" cy="9" r="7" fill="none" stroke-width="2.5"/>` +
+      `<circle class="lt-fill" cx="9" cy="9" r="7" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="${fill} ${c}"/></svg>${v}</span>`;
+  }
+
+  const TAG_LABEL = { 'most accurate from English': 'best from English' };
   const COLS = [
-    ['Model', m => m.name + m.quant, m => `<span class="lt-name">${esc(m.name)}</span><span class="lt-q">${esc(m.quant)}</span>${m.tag ? `<span class="lt-tag lt-tag-${m.tag.split(' ')[0]}">${esc(m.tag)}</span>` : ''}`],
-    ['Family', m => m.family, m => esc(m.family)],
-    ['File', m => m.gb, m => m.gb.toFixed(1) + ' GB', 'lt-num'],
-    ['Into English', m => m.intoEn, m => `${m.intoEn}<span class="lt-bar" style="width:${Math.max(0, (m.intoEn - 55) * 4)}px"></span>`, 'lt-num'],
-    ['From English', m => m.fromEn, m => `${m.scriptConversion ? '' : '<span class="lt-warn" title="Measured before the Chinese script conversion">⚠ </span>'}${m.fromEn}`, 'lt-num'],
-    ['Per line', m => m.median, m => fmtS(m.median), 'lt-num'],
-    ['Slowest 10 %', m => m.p90, m => fmtS(m.p90), 'lt-num'],
+    ['Model', m => m.name + m.quant, m => `<span class="lt-model"><span class="lt-dot" style="background:${colorOf(m)}"></span>` +
+      `<span><span class="lt-name">${esc(m.name)}</span><span class="lt-q">${esc(m.quant)}</span>` +
+      `${m.tag ? `<br><span class="lt-tag lt-tag-${m.tag.split(' ')[0]}">${esc(TAG_LABEL[m.tag] || m.tag)}</span>` : ''}</span></span>`],
+    ['Size', m => m.gb, m => m.gb.toFixed(1) + ' GB', 'lt-num'],
+    ['Into English', m => m.intoEn, m => ring(m.intoEn), 'lt-num'],
+    ['From English', m => m.fromEn, m => (m.scriptConversion ? '' : '<span class="lt-warn" title="Measured before the Chinese script conversion">⚠ </span>') + ring(m.fromEn), 'lt-num'],
+    ['Per line', m => m.median, m => `${fmtS(m.median)}<span class="lt-slow" title="slowest 10 %">/ ${fmtS(m.p90)}</span>`, 'lt-num'],
     ['Speed', m => m.tps, m => Math.round(m.tps) + ' tok/s', 'lt-num'],
-    ['Cantonese (conversation)', m => m.cantonese.conversation[0], m => m.cantonese.conversation.join(' / '), 'lt-num'],
+    ['Cantonese', m => m.cantonese.conversation[0], m => `<span title="colloquial Cantonese into / from English">${m.cantonese.conversation.join(' / ')}</span>`, 'lt-num'],
   ];
 
   function renderTable() {
     const col = COLS[state.sortCol];
-    const rows = shown().sort((a, b) => {
+    const rows = [...data.models].sort((a, b) => {
       const x = col[1](a), y = col[1](b);
       return (x > y ? 1 : x < y ? -1 : 0) * (state.asc ? 1 : -1);
     });
     const t = document.getElementById('lt-table');
-    t.innerHTML = `<thead><tr>${COLS.map((c, i) => `<th class="${c[3] || ''} ${i === state.sortCol ? 'lt-sorted' + (state.asc ? ' lt-asc' : '') : ''}" data-i="${i}" tabindex="0">${c[0]}</th>`).join('')}</tr></thead>` +
+    t.innerHTML = `<thead><tr>${COLS.map((c, i) => `<th class="${c[3] || ''} ${i === state.sortCol ? 'lt-sorted' + (state.asc ? ' lt-asc' : '') : ''}" data-i="${i}" tabindex="0" scope="col">${c[0]}</th>`).join('')}</tr></thead>` +
       `<tbody>${rows.map(m => `<tr title="${esc(m.note || '')}">${COLS.map(c => `<td class="${c[3] || ''}">${c[2](m)}</td>`).join('')}</tr>`).join('')}</tbody>`;
     t.querySelectorAll('th').forEach(th => {
       const sort = () => {
         const i = +th.dataset.i;
-        state.asc = i === state.sortCol ? !state.asc : i < 2;
+        state.asc = i === state.sortCol ? !state.asc : i === 0 || i === 4;
         state.sortCol = i;
         renderTable();
       };
       th.addEventListener('click', sort);
       th.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sort(); } });
     });
-  }
-
-  // red (40) -> yellow (60) -> green (80+)
-  function heatColor(v) {
-    const t = Math.max(0, Math.min(1, (v - 40) / 40));
-    const stops = [[239, 68, 68], [234, 179, 8], [16, 185, 129]];
-    const [a, b, u] = t < 0.5 ? [stops[0], stops[1], t * 2] : [stops[1], stops[2], (t - 0.5) * 2];
-    return `rgb(${a.map((c, i) => Math.round(c + (b[i] - c) * u)).join(',')})`;
-  }
-
-  function renderHeat() {
-    const langs = state.heatDir === 'into' ? data.toEn : data.fromEn;
-    const rows = shown().sort((a, b) => b.intoEn - a.intoEn);
-    const t = document.getElementById('lt-heat');
-    t.innerHTML = `<tr><th class="lt-rowh"></th>${langs.map(l => `<th class="${data.inApp.includes(l) ? '' : 'lt-notapp'}"><span>${esc(data.names[l])}</span></th>`).join('')}</tr>` +
-      rows.map(m => `<tr><th class="lt-rowh">${esc(label(m))}</th>${langs.map(l => {
-        const v = m[state.heatDir][l];
-        return `<td style="background:${heatColor(v)}" title="${esc(label(m))} · ${esc(data.names[l])}: ${v}">${Math.round(v)}</td>`;
-      }).join('')}</tr>`).join('');
   }
 })();

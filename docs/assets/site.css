@@ -1,24 +1,88 @@
-/* Site-wide tweaks on top of Material */
+/* Site colours: neutral charcoal (dark) or white (light) with soft pastel accents, on top of Material.
+   The dashboard (models.css) uses the --lt-* tokens defined here too. */
 
-/* The app's lavender for links and the header in both schemes */
 [data-md-color-scheme="default"] {
-  --md-primary-fg-color: #6d28d9;
-  --md-primary-fg-color--light: #8b5cf6;
-  --md-primary-fg-color--dark: #5b21b6;
-  --md-accent-fg-color: #7c3aed;
-  --md-typeset-a-color: #6d28d9;
+  --lt-bg: #ffffff;
+  --lt-card: #f7f9fb;
+  --lt-card-2: #eef2f6;
+  --lt-hi-1: #e3f5ff;            /* highlighted cards */
+  --lt-hi-2: #e5ecf6;
+  --lt-hi-text: #1c1c1c;
+  --lt-text: #1c1c1c;
+  --lt-muted: rgba(28, 28, 28, 0.45);
+  --lt-line: rgba(28, 28, 28, 0.08);
+  --lt-accent: #4a6fa5;
+  --lt-positive: #16a34a;
+  --lt-warn: #d97706;
+  --lt-tooltip: #1c1c1c;
+  --lt-tooltip-text: #ffffff;
+
+  --md-primary-fg-color: #1c1c1c;
+  --md-primary-fg-color--light: #3a3a3a;
+  --md-primary-fg-color--dark: #000000;
+  --md-primary-bg-color: #ffffff;
+  --md-accent-fg-color: #4a6fa5;
+  --md-typeset-a-color: #3f64a0;
+  --md-default-bg-color: var(--lt-bg);
 }
+
 [data-md-color-scheme="slate"] {
-  --md-primary-fg-color: #2d2939;
-  --md-primary-fg-color--light: #3b3549;
-  --md-primary-fg-color--dark: #16151c;
-  --md-accent-fg-color: #b69cff;
-  --md-typeset-a-color: #b69cff;
-  --md-default-bg-color: #0f0e14;
+  --lt-bg: #1c1c1c;
+  --lt-card: #272727;
+  --lt-card-2: #2f2f2f;
+  --lt-hi-1: #e3f5ff;
+  --lt-hi-2: #e5ecf6;
+  --lt-hi-text: #1c1c1c;
+  --lt-text: rgba(255, 255, 255, 0.92);
+  --lt-muted: rgba(255, 255, 255, 0.45);
+  --lt-line: rgba(255, 255, 255, 0.08);
+  --lt-accent: #a8c5da;
+  --lt-positive: #4ade80;
+  --lt-warn: #fbbf24;
+  --lt-tooltip: #111111;
+  --lt-tooltip-text: #ffffff;
+
+  --md-hue: 0;
+  --md-primary-fg-color: #1c1c1c;
+  --md-primary-fg-color--light: #2a2a2a;
+  --md-primary-fg-color--dark: #141414;
+  --md-primary-bg-color: rgba(255, 255, 255, 0.92);
+  --md-accent-fg-color: #c6c7f8;
+  --md-typeset-a-color: #a8c5da;
+  --md-default-bg-color: var(--lt-bg);
+  --md-default-fg-color: rgba(255, 255, 255, 0.92);
+  --md-default-fg-color--light: rgba(255, 255, 255, 0.55);
+  --md-default-fg-color--lighter: rgba(255, 255, 255, 0.3);
+  --md-default-fg-color--lightest: rgba(255, 255, 255, 0.08);
+  --md-code-bg-color: #272727;
+  --md-footer-bg-color: #161616;
+  --md-footer-bg-color--dark: #111111;
 }
+
+/* Header and tabs blend into the page, separated by a hairline (as in the reference dashboards) */
+.md-header {
+  background-color: var(--lt-bg);
+  color: var(--lt-text);
+  box-shadow: 0 1px 0 var(--lt-line);
+}
+.md-header[data-md-state="shadow"], .md-header--shadow { box-shadow: 0 1px 0 var(--lt-line); }
+.md-search__form { background-color: var(--lt-card); border-radius: 0.5rem; }
+.md-search__input { color: var(--lt-text); }
+.md-search__input::placeholder, .md-search__icon { color: var(--lt-muted); }
+.md-nav__link--active, .md-nav__item .md-nav__link--active { color: var(--lt-text); font-weight: 600; }
+
+/* Tables and admonitions in the same soft card style */
+.md-typeset table:not([class]) { border: 0; border-radius: 0.75rem; overflow: hidden; background: var(--lt-card);
+  box-shadow: none; font-size: 0.68rem; }
+.md-typeset table:not([class]) th { background: var(--lt-card-2); color: var(--lt-muted); font-weight: 600; }
+.md-typeset table:not([class]) td { border-top: 1px solid var(--lt-line); }
+.md-typeset .admonition, .md-typeset details { border-radius: 0.75rem; border-width: 0; background: var(--lt-card);
+  box-shadow: none; }
+
+/* Buttons on the home page */
+.md-typeset .md-button { border-radius: 0.6rem; }
+.md-typeset .md-button--primary { background: var(--lt-hi-1); border-color: var(--lt-hi-1); color: var(--lt-hi-text); }
 
 /* Screenshots side by side */
 .md-typeset .shots { display: flex; flex-wrap: wrap; gap: .8rem; align-items: flex-start; }
-.md-typeset .shots img { border-radius: .5rem; box-shadow: 0 .3rem 1rem rgba(0, 0, 0, .18); }
-.md-typeset .lt-sub { font-size: .68rem; color: var(--md-default-fg-color--light); margin: 0 0 .6rem; }
-.md-typeset .lt-panel h2 { margin-top: 0; }
+.md-typeset .shots img { border-radius: .6rem; box-shadow: 0 .3rem 1rem rgba(0, 0, 0, .18); }

@@ -1,5 +1,7 @@
 ---
 description: Which local translation model to load in LM Studio for Local AI Live Translate - accuracy and speed of every model we've tested, by language.
+hide:
+  - toc
 ---
 
 # Translation models
@@ -11,32 +13,45 @@ How it's measured: [How we benchmark](benchmark-method.md).
 
 <div id="lt-dashboard" data-src="../data/benchmarks.json" markdown="0">
   <div class="lt-meta" id="lt-meta"></div>
-  <div class="lt-cards" id="lt-cards"></div>
+  <div class="lt-kpis" id="lt-kpis"></div>
 
-  <div class="lt-panel">
-    <h2 id="quality-vs-speed">Quality vs speed</h2>
-    <p class="lt-sub">Up is more accurate, left is faster (median time per subtitle line). Bubble size: file size.</p>
-    <div class="lt-toolbar">
-      <div class="lt-seg" id="lt-dir-chart"><button data-v="intoEn" class="lt-on">Into English</button><button data-v="fromEn">From English</button></div>
-      <span>Fits in</span>
-      <div class="lt-seg" id="lt-vram"><button data-v="99" class="lt-on">Any</button><button data-v="16">16 GB</button><button data-v="8">8 GB</button><button data-v="4">4 GB</button></div>
+  <section class="lt-panel">
+    <div class="lt-panel-head">
+      <div>
+        <h2 id="quality-vs-speed">Quality vs speed</h2>
+        <p class="lt-sub">Up is more accurate, left is faster (median time per subtitle line). Bubble size: file size.</p>
+      </div>
+      <div class="lt-toolbar">
+        <div class="lt-seg" id="lt-dir-chart"><button data-v="intoEn" class="lt-on">Into English</button><button data-v="fromEn">From English</button></div>
+        <div class="lt-seg" id="lt-vram" title="Only models whose file fits in this much video memory"><button data-v="99" class="lt-on">Any size</button><button data-v="16">≤ 16 GB</button><button data-v="8">≤ 8 GB</button><button data-v="4">≤ 4 GB</button></div>
+      </div>
     </div>
     <div class="lt-chart"><canvas id="lt-chart" aria-label="Quality against speed for each model" role="img"></canvas></div>
-  </div>
+  </section>
 
-  <div class="lt-panel">
-    <h2 id="all-results">All results</h2>
-    <p class="lt-sub">Click a column to sort. "Per line" is the median time to translate one subtitle; "Cantonese (conversation)" is colloquial Cantonese into / from English.</p>
-    <div class="lt-heat-wrap"><table class="lt-table" id="lt-table"></table></div>
-  </div>
+  <section class="lt-panel">
+    <div class="lt-panel-head">
+      <div>
+        <h2 id="by-language">By language</h2>
+        <p class="lt-sub">chrF for each language, best-translated first. Hover to compare the models at one language; click a model to show or hide it. Faded names are languages the app doesn't offer yet.</p>
+      </div>
+      <div class="lt-toolbar">
+        <div class="lt-seg" id="lt-dir-lang"><button data-v="into" class="lt-on">Into English</button><button data-v="from">From English</button></div>
+      </div>
+    </div>
+    <div class="lt-legend" id="lt-lang-legend"></div>
+    <div class="lt-chart lt-chart-tall"><canvas id="lt-lang-chart" aria-label="Translation quality per language for each model" role="img"></canvas></div>
+  </section>
 
-  <div class="lt-panel">
-    <h2 id="by-language">By language</h2>
-    <p class="lt-sub">chrF for each language pair. Faded columns are languages the benchmark covers but the app doesn't offer yet.</p>
-    <div class="lt-toolbar"><div class="lt-seg" id="lt-dir-heat"><button data-v="into" class="lt-on">Into English</button><button data-v="from">From English</button></div></div>
-    <div class="lt-heat-wrap"><table class="lt-heat" id="lt-heat"></table></div>
-    <div class="lt-legend"><span>40</span><span class="lt-grad"></span><span>80+</span></div>
-  </div>
+  <section class="lt-panel">
+    <div class="lt-panel-head">
+      <div>
+        <h2 id="all-results">All results</h2>
+        <p class="lt-sub">Click a column to sort. Rings show chrF out of 100. Hover a row for notes.</p>
+      </div>
+    </div>
+    <div class="lt-table-wrap"><table class="lt-table" id="lt-table"></table></div>
+  </section>
 </div>
 
 ## Notes
