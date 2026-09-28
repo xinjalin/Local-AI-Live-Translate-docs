@@ -10,7 +10,7 @@ copyright: Local AI Live Translate by xinjalin · MIT License
 theme:
   name: material
   logo: images/logo.png
-  favicon: images/logo.png
+  favicon: images/favicon.png
   font:
     text: Plus Jakarta Sans
     code: JetBrains Mono
