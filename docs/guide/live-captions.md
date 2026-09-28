@@ -58,6 +58,12 @@ forgiving about typos and abbreviations ("opacty", "fnt sz", "ctx") and knows a 
 ("transparency", "hotkey", "noise"). Pick a suggestion with the mouse, or the arrow keys and
 ++enter++, to jump straight to that setting.
 
+## Right-click to paste
+
+Right-click in any text field (a server address, an API key, a name or a search box) to paste into
+it, as in a terminal. With text selected, right-click copies it instead. **Shift** + right-click opens
+the browser's usual menu.
+
 ## Save transcripts
 
 **Save transcripts** (Live tab) is off by default. When on, each session is saved as a Markdown file

@@ -23,8 +23,9 @@ Turned off, they disappear from the menu and translation goes back to LM Studio.
 ## Using one
 
 1. Pick the provider under **LLM Server**.
-2. Paste your API key (the *Get a key* link opens the provider's key page). It's saved when you leave
-   the field, and the field is emptied.
+2. Paste your API key (the *Get a key* link opens the provider's key page). It's saved as soon as you
+   paste it, and never shown in the field. (A key typed by hand is saved when you press Enter or
+   leave the field.)
 3. Choose a **Model**: the menu lists the models on your account and has a search box; to use a model
    the list doesn't show, type its name and pick **Use "…"**.
 
