@@ -16,5 +16,5 @@ syntax, translation and secret-scan checks.
 
 This site is built from the [Local-AI-Live-Translate-docs](https://github.com/xinjalin/Local-AI-Live-Translate-docs)
 repository with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/), and published by
-GitHub Actions on every push. Every page has an edit link (the pencil at the top). The translation
-model numbers come from its `bench/` folder — see [How we benchmark](models/benchmark-method.md).
+GitHub Actions on every push. The translation model numbers come from its `bench/` folder — see
+[How we benchmark](models/benchmark-method.md).

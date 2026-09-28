@@ -4,7 +4,7 @@ site_url: https://xinjalin.github.io/Local-AI-Live-Translate-docs/
 site_author: xinjalin
 repo_url: https://github.com/xinjalin/Local-AI-Live-Translate
 repo_name: xinjalin/Local-AI-Live-Translate
-edit_uri: https://github.com/xinjalin/Local-AI-Live-Translate-docs/edit/main/docs/
+edit_uri: ""
 copyright: Local AI Live Translate by xinjalin · MIT License
 
 theme:
@@ -37,7 +37,6 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
-    - content.action.edit
     - toc.follow
 
 nav:
